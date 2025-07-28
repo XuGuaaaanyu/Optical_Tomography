@@ -1,0 +1,3 @@
+../Drivers/AD717x/no_os_alloc.c:42:30:no_os_malloc	1
+../Drivers/AD717x/no_os_alloc.c:53:30:no_os_calloc	1
+../Drivers/AD717x/no_os_alloc.c:65:29:no_os_free	1
