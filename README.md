@@ -65,7 +65,7 @@ Designed for high‑speed sensing with minimal MCU overhead and a 2 Mbit s�
 ## PB4 Dual‑Role (SPI ⇄ EXTI)
 
 **PB4** acts as the ADC `MISO` during SPI transfers and as the **RDY** falling‑edge interrupt line between conversions.
-
+To toggle the alternate function of PB4 between SPI3_MISO and GPIO_EXTI4, use the following helper functions:
 ```c
 /* Runtime pin‑mux helpers -----------------------------------------------*/
 /** Switch PB4 from SPI3_MISO ➜ EXTI (falling edge) */
@@ -76,7 +76,9 @@ static inline void rdy_to_exti(void) {
 static inline void rdy_to_spi(void) {
     GPIOB->MODER = (GPIOB->MODER & ~(0x3u << (4 * 2))) | (0x2u << (4 * 2));
 }
-
+```
+To temporarily disable or enable EXTI interrupt (e.g., when updating LED or transmitting data to PC), use the following helper functions:
+```c
 /* EXTI mask control ------------------------------------------------------*/
 static inline void rdy_exti_enable(void) {
     EXTI->PR1 = (1U << 4);                     /* Clear pending  */
