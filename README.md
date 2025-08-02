@@ -40,14 +40,14 @@ Designed for high‑speed sensing with minimal MCU overhead and a 2 Mbit s�
 | Data Size       | 8 bit                                           |
 | Clock Prescaler | 2 → **24 Mbit s⁻¹**                             |
 | CPOL / CPHA     | High / 2nd Edge (Mode 3 – required by AD7175‑8) |
-| Pins            | PB3 (SCK), **PB4 (MISO / EXTI4)**, PB5 (MOSI)   |
+| Pins            | PB3 (SCK), **PB4 (MISO)**, PB5 (MOSI)   |
 | CS (GPIO)       | PA12 (active low)                               |
 
 ### USART2 — PC Uplink
 
 | Property | Value                  |
 | -------- | ---------------------- |
-| Baud     | **2 000 000 Bd**       |
+| Baud     | **2 000 000 Bits/s**   |
 | Frame    | 8‑N‑1                  |
 | DMA      | TX → DMA1‑Ch7 (Normal) |
 | Pins     | PA2 (TX), PA15 (RX)    |
@@ -120,14 +120,18 @@ HAL_NVIC_SetPriority(EXTI4_IRQn, 0, 0);
 ## Runtime Flow
 
 1. **LED‑scan loop** selects LED *i* (SPI1).
-2. AD7175‑8 runs in *continuous conversion*; each falling RDY on PB4 triggers `EXTI4_IRQHandler()`.
+2. AD7175‑8 runs in *continuous read*; each falling RDY on PB4 triggers `EXTI4_IRQHandler()`, which reads in one channel data.
 3. Handler:
 
    1. `rdy_to_spi()`   → switch PB4 to MISO.
-   2. Read 3 bytes over SPI3 (24‑bit conversion).
-   3. `rdy_to_exti()`  → return PB4 to EXTI.
-   4. Store sample; advance channel/LED indices.
-4. After collecting one full LED frame, disable `RDY` interrupt, update LED pattern, and stream data to PC via USART2 DMA. Re‑enable EXTI when the bus is free.
+   2. Read 4 bytes over SPI3 (24‑bit conversion + 8 bit status).
+   3. Unpack the frame to extract channel and data. 
+   4. `rdy_to_exti()`  → return PB4 to EXTI.
+4. After collecting one full LED frame, disable `RDY` interrupt, update LED pattern
+5. Stream data to PC via USART2 DMA. Re‑enable EXTI when the bus is free.
+
+The waveform on a logic analyzer looks like the following:
+
 
 ---
 
