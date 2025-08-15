@@ -6,6 +6,8 @@ Firmware for **NUCLEO‑L432KC** that
 2. Time‑division multiplexes illumination from **SK9822‑EC20** addressable LEDs.
 
 Designed for high‑speed sensing with minimal MCU overhead and a 2 Mbit s⁻¹ uplink to the host PC.
+<img width="593" height="584" alt="image" src="https://github.com/user-attachments/assets/7f3c0547-0643-46ca-8193-37fd3e7a7031" />
+
 <img width="1075" height="958" alt="image" src="https://github.com/user-attachments/assets/d9bf045e-78c8-4ed2-8cc2-aec65b2b5425" />
 
 
